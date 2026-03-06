@@ -116,7 +116,3 @@ uv run pytest --cov               # with coverage
 - **Frontend:** React, Vite, TypeScript, Recharts
 - **Tooling:** uv, Ruff, Pytest, TensorBoard
 - **Infra:** Docker, Prometheus, Grafana, MLflow
-
-## License
-
-Apache 2.0 — see [LICENSE](LICENSE).
