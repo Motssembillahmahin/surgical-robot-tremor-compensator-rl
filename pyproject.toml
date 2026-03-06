@@ -17,6 +17,7 @@ dependencies = [
     "mlflow>=2.10.0",
     "prometheus-client>=0.20.0",
     "tensorboard>=2.20.0",
+    "websockets>=16.0",
 ]
 
 [dependency-groups]

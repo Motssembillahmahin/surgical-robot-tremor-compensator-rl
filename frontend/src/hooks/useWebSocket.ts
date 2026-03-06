@@ -37,7 +37,28 @@ export function useWebSocket(url: string = DEFAULT_WS_URL): UseWebSocketReturn {
 
     ws.onmessage = (event) => {
       try {
-        const data: TrainingMetrics = JSON.parse(event.data);
+        const raw = JSON.parse(event.data);
+        // Ignore pings and status messages
+        if (raw.type === "ping" || raw.type === "status") return;
+        // Only process metrics messages
+        if (raw.type !== "metrics") return;
+
+        const data: TrainingMetrics = {
+          step: raw.step ?? 0,
+          episode: raw.episode ?? 0,
+          reward_total: raw.reward_total ?? 0,
+          reward_tracking: raw.reward_tracking ?? 0,
+          reward_smooth: raw.reward_smooth ?? 0,
+          reward_safety: raw.reward_safety ?? 0,
+          reward_latency: raw.reward_latency ?? 0,
+          reward_human: raw.reward_human ?? 0,
+          compensation_error_mm: raw.compensation_error_mm ?? 0,
+          tissue_proximity_min: raw.tissue_proximity_min ?? 50,
+          sac_entropy: raw.sac_entropy ?? 0,
+          sac_actor_loss: raw.sac_actor_loss ?? 0,
+          sac_critic_loss: raw.sac_critic_loss ?? 0,
+          sac_ent_coef: raw.sac_ent_coef ?? 0,
+        };
         setLatest(data);
         setHistory((prev) => {
           const next = [...prev, data];

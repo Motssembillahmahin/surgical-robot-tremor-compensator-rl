@@ -4,6 +4,7 @@ import { FrequencySpectrum } from "./components/FrequencySpectrum";
 import { RewardBreakdown } from "./components/RewardBreakdown";
 import { SafetyZone } from "./components/SafetyZone";
 import { TrainingMetricsPanel } from "./components/TrainingMetrics";
+import { FeedbackPanel } from "./components/FeedbackPanel";
 import "./App.css";
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <RewardBreakdown history={history} />
         <SafetyZone history={history} />
         <TrainingMetricsPanel history={history} />
+        <FeedbackPanel latest={latest} />
       </main>
     </div>
   );
