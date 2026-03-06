@@ -13,6 +13,7 @@ import gymnasium as gym
 import numpy as np
 import yaml
 
+from env.physics_sim import RobotArmSimulation
 from env.tremor_generator import TremorGenerator
 from utils.signal_processing import compute_dominant_frequency, low_pass_filter
 
@@ -32,7 +33,7 @@ class SurgicalTremorEnv(gym.Env):
 
     metadata = {"render_modes": ["human"]}
 
-    def __init__(self, config_path: str = "config.yaml") -> None:
+    def __init__(self, config_path: str = "config.yaml", use_physics: bool = False) -> None:
         super().__init__()
 
         with open(config_path) as f:
@@ -47,6 +48,17 @@ class SurgicalTremorEnv(gym.Env):
         self.tissue_boundary = np.array(
             [tissue_pos["x"], tissue_pos["y"], tissue_pos["z"]], dtype=np.float32
         )
+
+        # Physics simulation (Phase 4)
+        self.use_physics = use_physics
+        if use_physics:
+            self._physics = RobotArmSimulation(
+                tissue_position=self.tissue_boundary,
+                dt=self.dt,
+            )
+            self._physics.connect()
+        else:
+            self._physics = None
 
         term_cfg = env_cfg["termination"]
         self.terminate_on_perforation = term_cfg["on_tissue_perforation"]
@@ -102,12 +114,18 @@ class SurgicalTremorEnv(gym.Env):
             self._rng = np.random.default_rng(seed)
 
         self._step_count = 0
-        self._robot_tip_pos = np.zeros(3, dtype=np.float32)
-        self._robot_tip_vel = np.zeros(3, dtype=np.float32)
         self._prev_action = np.zeros(3, dtype=np.float32)
         self._consecutive_violations = 0
         self._raw_signal_history = []
         self._human_feedback_signal = 0.0
+
+        # Reset robot arm (physics or simple mode)
+        if self._physics is not None:
+            self._robot_tip_pos = self._physics.reset(self._rng)
+            self._robot_tip_vel = np.zeros(3, dtype=np.float32)
+        else:
+            self._robot_tip_pos = np.zeros(3, dtype=np.float32)
+            self._robot_tip_vel = np.zeros(3, dtype=np.float32)
 
         # Generate a smooth intended trajectory starting point
         self._intended_trajectory = self._rng.uniform(-5.0, 5.0, size=3).astype(np.float32)
@@ -142,13 +160,20 @@ class SurgicalTremorEnv(gym.Env):
 
         # Compensated robot tip position = raw input + agent correction
         prev_pos = self._robot_tip_pos.copy()
-        self._robot_tip_pos = surgeon_raw + action
 
-        # Velocity
-        self._robot_tip_vel = (self._robot_tip_pos - prev_pos) / self.dt
-
-        # Tissue proximity
-        tissue_proximity = float(np.linalg.norm(self._robot_tip_pos - self.tissue_boundary))
+        if self._physics is not None:
+            # Physics mode: desired position goes through IK → FK pipeline
+            desired_pos = surgeon_raw + action
+            desired_delta = desired_pos - self._robot_tip_pos
+            self._robot_tip_pos = self._physics.apply_action(desired_delta)
+            self._robot_tip_vel = self._physics.get_tip_velocity()
+            # Tissue proximity from collision mesh
+            tissue_proximity = self._physics.get_tissue_proximity()
+        else:
+            # Simple mode: direct position update
+            self._robot_tip_pos = surgeon_raw + action
+            self._robot_tip_vel = (self._robot_tip_pos - prev_pos) / self.dt
+            tissue_proximity = float(np.linalg.norm(self._robot_tip_pos - self.tissue_boundary))
 
         # ── Reward computation (clinically grounded) ──────────────────
 

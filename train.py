@@ -180,6 +180,10 @@ def parse_args() -> argparse.Namespace:
         "--agent", type=str, default="sb3", choices=["sb3", "custom"],
         help="Agent type: sb3 (Stable-Baselines3) or custom (pure PyTorch)",
     )
+    parser.add_argument(
+        "--physics", action="store_true",
+        help="Enable 6-DOF robot arm physics simulation (Phase 4)",
+    )
     return parser.parse_args()
 
 
@@ -193,8 +197,10 @@ def main() -> None:
     seed_everything(master_seed)
 
     # Create environment with safety wrapper
-    base_env = SurgicalTremorEnv(config_path=args.config)
+    base_env = SurgicalTremorEnv(config_path=args.config, use_physics=args.physics)
     env = SafetySurgicalEnv(base_env, config_path=args.config)
+    if args.physics:
+        print("Physics simulation enabled (6-DOF robot arm)")
 
     # Logger
     logger = TrainingLogger(
