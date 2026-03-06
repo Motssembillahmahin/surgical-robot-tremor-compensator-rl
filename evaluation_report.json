@@ -1,0 +1,343 @@
+{
+  "timestamp": "2026-03-06T16:10:53.420611+00:00",
+  "agent": "custom",
+  "checkpoint": "checkpoints/best_model_custom.pt",
+  "results": [
+    {
+      "tremor_type": "essential",
+      "num_episodes": 10,
+      "compensation_error_mm": 0.2972853457772956,
+      "tremor_rejection_ratio_dB": -0.11333913137560843,
+      "safety_violations": 0,
+      "compensation_latency_ms": 0.28047724544994707,
+      "human_feedback_score": -0.9970413148403168,
+      "mean_episode_return": -556.8749536519556,
+      "episodes": [
+        {
+          "episode": 0,
+          "rms_error_mm": 0.2715436676275666,
+          "safety_violations": 0,
+          "latency_ms": 0.28444730849878397,
+          "rejection_ratio_dB": -0.07754988272164945,
+          "feedback_score": -0.9955320954322815,
+          "return": -502.9274274001183,
+          "steps": 2000
+        },
+        {
+          "episode": 1,
+          "rms_error_mm": 0.33503921429934697,
+          "safety_violations": 0,
+          "latency_ms": 0.2706460830013384,
+          "rejection_ratio_dB": -0.3125146188334026,
+          "feedback_score": -0.9978047013282776,
+          "return": -636.9113622384898,
+          "steps": 2000
+        },
+        {
+          "episode": 2,
+          "rms_error_mm": 0.28060368918806505,
+          "safety_violations": 0,
+          "latency_ms": 0.2819826170016313,
+          "rejection_ratio_dB": 0.08815540886491238,
+          "feedback_score": -0.9982085227966309,
+          "return": -536.9729182839912,
+          "steps": 2000
+        },
+        {
+          "episode": 3,
+          "rms_error_mm": 0.31710832721419985,
+          "safety_violations": 0,
+          "latency_ms": 0.2770563445010339,
+          "rejection_ratio_dB": -0.2988086898596264,
+          "feedback_score": -0.9967835545539856,
+          "return": -587.9013598550215,
+          "steps": 2000
+        },
+        {
+          "episode": 4,
+          "rms_error_mm": 0.30652769419833464,
+          "safety_violations": 0,
+          "latency_ms": 0.29764490249726805,
+          "rejection_ratio_dB": -0.14857006291128705,
+          "feedback_score": -0.9969496130943298,
+          "return": -572.9460375469562,
+          "steps": 2000
+        },
+        {
+          "episode": 5,
+          "rms_error_mm": 0.2514597029111397,
+          "safety_violations": 0,
+          "latency_ms": 0.2819523645011941,
+          "rejection_ratio_dB": -0.0737493206079482,
+          "feedback_score": -0.9951833486557007,
+          "return": -466.0469238479045,
+          "steps": 2000
+        },
+        {
+          "episode": 6,
+          "rms_error_mm": 0.2905827218887748,
+          "safety_violations": 0,
+          "latency_ms": 0.27396150049753487,
+          "rejection_ratio_dB": -0.13668743941988515,
+          "feedback_score": -0.99622642993927,
+          "return": -552.7261173298625,
+          "steps": 2000
+        },
+        {
+          "episode": 7,
+          "rms_error_mm": 0.26097945265332906,
+          "safety_violations": 0,
+          "latency_ms": 0.2804287254984956,
+          "rejection_ratio_dB": -0.20261675574607263,
+          "feedback_score": -0.997467041015625,
+          "return": -488.3085994644774,
+          "steps": 2000
+        },
+        {
+          "episode": 8,
+          "rms_error_mm": 0.3403441508632024,
+          "safety_violations": 0,
+          "latency_ms": 0.27295380649957224,
+          "rejection_ratio_dB": 0.04907443608603921,
+          "feedback_score": -0.9985635280609131,
+          "return": -657.6228685946564,
+          "steps": 2000
+        },
+        {
+          "episode": 9,
+          "rms_error_mm": 0.3048417040444876,
+          "safety_violations": 0,
+          "latency_ms": 0.2836988020026183,
+          "rejection_ratio_dB": -0.020124388607164242,
+          "feedback_score": -0.9976943135261536,
+          "return": -566.3859219580781,
+          "steps": 2000
+        }
+      ]
+    },
+    {
+      "tremor_type": "parkinsons",
+      "num_episodes": 10,
+      "compensation_error_mm": 0.3307429723905909,
+      "tremor_rejection_ratio_dB": -0.14745719663851956,
+      "safety_violations": 0,
+      "compensation_latency_ms": 0.2777792829489044,
+      "human_feedback_score": -0.9970380961894989,
+      "mean_episode_return": -614.1134844913583,
+      "episodes": [
+        {
+          "episode": 0,
+          "rms_error_mm": 0.3141849525140638,
+          "safety_violations": 0,
+          "latency_ms": 0.28213067300021066,
+          "rejection_ratio_dB": -0.26355820589422474,
+          "feedback_score": -0.9955443143844604,
+          "return": -574.9372783678974,
+          "steps": 2000
+        },
+        {
+          "episode": 1,
+          "rms_error_mm": 0.36419043694620956,
+          "safety_violations": 0,
+          "latency_ms": 0.27938447699852986,
+          "rejection_ratio_dB": -0.31868960287589515,
+          "feedback_score": -0.9977923035621643,
+          "return": -688.7649871600606,
+          "steps": 2000
+        },
+        {
+          "episode": 2,
+          "rms_error_mm": 0.313060328995645,
+          "safety_violations": 0,
+          "latency_ms": 0.28412503149957047,
+          "rejection_ratio_dB": 0.15956201917718948,
+          "feedback_score": -0.9982178807258606,
+          "return": -591.0843629675859,
+          "steps": 2000
+        },
+        {
+          "episode": 3,
+          "rms_error_mm": 0.3482202069665499,
+          "safety_violations": 0,
+          "latency_ms": 0.2718100484999013,
+          "rejection_ratio_dB": -0.35814674309872074,
+          "feedback_score": -0.9967842102050781,
+          "return": -640.5746584702455,
+          "steps": 2000
+        },
+        {
+          "episode": 4,
+          "rms_error_mm": 0.3361857637105869,
+          "safety_violations": 0,
+          "latency_ms": 0.27809882949804887,
+          "rejection_ratio_dB": -0.08487232632100362,
+          "feedback_score": -0.9969403743743896,
+          "return": -620.1938332811831,
+          "steps": 2000
+        },
+        {
+          "episode": 5,
+          "rms_error_mm": 0.2930263035014342,
+          "safety_violations": 0,
+          "latency_ms": 0.27169232499727514,
+          "rejection_ratio_dB": -0.043815537728689694,
+          "feedback_score": -0.9951891303062439,
+          "return": -535.2137076084063,
+          "steps": 2000
+        },
+        {
+          "episode": 6,
+          "rms_error_mm": 0.32378012282469704,
+          "safety_violations": 0,
+          "latency_ms": 0.2724264094977116,
+          "rejection_ratio_dB": -0.035158191743733046,
+          "feedback_score": -0.9962150454521179,
+          "return": -608.055067513145,
+          "steps": 2000
+        },
+        {
+          "episode": 7,
+          "rms_error_mm": 0.3013576065899595,
+          "safety_violations": 0,
+          "latency_ms": 0.27784731650172034,
+          "rejection_ratio_dB": -0.230943302180438,
+          "feedback_score": -0.9974541664123535,
+          "return": -559.2723939576151,
+          "steps": 2000
+        },
+        {
+          "episode": 8,
+          "rms_error_mm": 0.36663173374778135,
+          "safety_violations": 0,
+          "latency_ms": 0.2789373874984449,
+          "rejection_ratio_dB": -0.0890520931216754,
+          "feedback_score": -0.998564600944519,
+          "return": -699.2233056385037,
+          "steps": 2000
+        },
+        {
+          "episode": 9,
+          "rms_error_mm": 0.3381480615578239,
+          "safety_violations": 0,
+          "latency_ms": 0.28134033149763127,
+          "rejection_ratio_dB": -0.20989798259800452,
+          "feedback_score": -0.9976789355278015,
+          "return": -623.8152499489413,
+          "steps": 2000
+        }
+      ]
+    },
+    {
+      "tremor_type": "physiological",
+      "num_episodes": 10,
+      "compensation_error_mm": 0.26840346389843045,
+      "tremor_rejection_ratio_dB": -0.20321475536186967,
+      "safety_violations": 0,
+      "compensation_latency_ms": 0.2749095473511261,
+      "human_feedback_score": -0.9970888078212738,
+      "mean_episode_return": -490.40769301967146,
+      "episodes": [
+        {
+          "episode": 0,
+          "rms_error_mm": 0.23814845770473858,
+          "safety_violations": 0,
+          "latency_ms": 0.2712862590014993,
+          "rejection_ratio_dB": -0.3584743186537987,
+          "feedback_score": -0.9956142902374268,
+          "return": -430.9603950488957,
+          "steps": 2000
+        },
+        {
+          "episode": 1,
+          "rms_error_mm": 0.3196384693756885,
+          "safety_violations": 0,
+          "latency_ms": 0.2770864720005193,
+          "rejection_ratio_dB": -0.6345796910713679,
+          "feedback_score": -0.9978174567222595,
+          "return": -585.1978495175384,
+          "steps": 2000
+        },
+        {
+          "episode": 2,
+          "rms_error_mm": 0.24360025436998192,
+          "safety_violations": 0,
+          "latency_ms": 0.2709322865011927,
+          "rejection_ratio_dB": 0.26242732717146805,
+          "feedback_score": -0.9982460737228394,
+          "return": -462.2220272680033,
+          "steps": 2000
+        },
+        {
+          "episode": 3,
+          "rms_error_mm": 0.29924347028157655,
+          "safety_violations": 0,
+          "latency_ms": 0.28189971950268955,
+          "rejection_ratio_dB": -0.4679510368069656,
+          "feedback_score": -0.9968465566635132,
+          "return": -542.341940015628,
+          "steps": 2000
+        },
+        {
+          "episode": 4,
+          "rms_error_mm": 0.27939425258778566,
+          "safety_violations": 0,
+          "latency_ms": 0.27003883399811457,
+          "rejection_ratio_dB": -0.3517155679822135,
+          "feedback_score": -0.997008740901947,
+          "return": -508.8726908575573,
+          "steps": 2000
+        },
+        {
+          "episode": 5,
+          "rms_error_mm": 0.21040231275781066,
+          "safety_violations": 0,
+          "latency_ms": 0.27950298150244635,
+          "rejection_ratio_dB": -0.08477585588278415,
+          "feedback_score": -0.9952853918075562,
+          "return": -386.48234227114546,
+          "steps": 2000
+        },
+        {
+          "episode": 6,
+          "rms_error_mm": 0.24981360449817558,
+          "safety_violations": 0,
+          "latency_ms": 0.27110818550136173,
+          "rejection_ratio_dB": -0.026728346646778357,
+          "feedback_score": -0.9962631464004517,
+          "return": -477.00760634364957,
+          "steps": 2000
+        },
+        {
+          "episode": 7,
+          "rms_error_mm": 0.22847321120006708,
+          "safety_violations": 0,
+          "latency_ms": 0.277671828000166,
+          "rejection_ratio_dB": -0.24960040828024033,
+          "feedback_score": -0.9974862933158875,
+          "return": -408.09063342887566,
+          "steps": 2000
+        },
+        {
+          "episode": 8,
+          "rms_error_mm": 0.31089796436116757,
+          "safety_violations": 0,
+          "latency_ms": 0.2721195065023494,
+          "rejection_ratio_dB": 0.16049260823677225,
+          "feedback_score": -0.9985915422439575,
+          "return": -596.4183436404576,
+          "steps": 2000
+        },
+        {
+          "episode": 9,
+          "rms_error_mm": 0.28113759231774643,
+          "safety_violations": 0,
+          "latency_ms": 0.2774494010009221,
+          "rejection_ratio_dB": -0.28124226370278876,
+          "feedback_score": -0.9977285861968994,
+          "return": -506.48310180496355,
+          "steps": 2000
+        }
+      ]
+    }
+  ]
+}
