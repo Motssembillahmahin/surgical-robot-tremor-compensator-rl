@@ -20,6 +20,7 @@ import yaml
 from stable_baselines3.common.callbacks import BaseCallback
 
 from agents.sac_agent import SACAgent
+from agents.sac_custom import CustomSACAgent
 from env.surgical_env import SurgicalTremorEnv
 from safety.constraints import SafetySurgicalEnv
 from utils.logger import TrainingLogger
@@ -175,6 +176,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--config", type=str, default="config.yaml", help="Config file path")
     parser.add_argument("--resume", type=str, default=None, help="Checkpoint path to resume from")
     parser.add_argument("--steps", type=int, default=None, help="Override total training steps")
+    parser.add_argument(
+        "--agent", type=str, default="sb3", choices=["sb3", "custom"],
+        help="Agent type: sb3 (Stable-Baselines3) or custom (pure PyTorch)",
+    )
     return parser.parse_args()
 
 
@@ -199,15 +204,26 @@ def main() -> None:
     logger.log_audit_event("training_start", {"config": args.config, "resume": args.resume})
 
     # Agent
-    if args.resume:
-        agent = SACAgent.load(args.resume, env=env)
-        logger.log_audit_event("checkpoint_loaded", {"path": args.resume})
+    use_custom = args.agent == "custom"
+    log_freq = config["logging"].get("log_freq_steps", 100)
+    checkpoint_dir = config["checkpointing"]["checkpoint_dir"]
+
+    if use_custom:
+        agent = CustomSACAgent(env=env, config_path=args.config)
+        if args.resume:
+            agent.load(args.resume)
+            logger.log_audit_event("checkpoint_loaded", {"path": args.resume})
     else:
-        agent = SACAgent(env=env, config_path=args.config)
+        if args.resume:
+            agent = SACAgent.load(args.resume, env=env)
+            logger.log_audit_event("checkpoint_loaded", {"path": args.resume})
+        else:
+            agent = SACAgent(env=env, config_path=args.config)
 
     # Graceful shutdown handler
     def graceful_shutdown(signum: int, frame: object) -> None:
-        checkpoint_path = Path(config["checkpointing"]["checkpoint_dir"]) / "emergency.zip"
+        ext = ".pt" if use_custom else ".zip"
+        checkpoint_path = Path(checkpoint_dir) / f"emergency{ext}"
         checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
         agent.save(str(checkpoint_path))
         logger.log_audit_event("emergency_checkpoint", {"path": str(checkpoint_path)})
@@ -218,27 +234,32 @@ def main() -> None:
     signal.signal(signal.SIGINT, graceful_shutdown)
     signal.signal(signal.SIGTERM, graceful_shutdown)
 
-    # Training callback
-    log_freq = config["logging"].get("log_freq_steps", 100)
-    checkpoint_dir = config["checkpointing"]["checkpoint_dir"]
-    callback = MetricsCallback(
-        logger_obj=logger,
-        log_freq=log_freq,
-        eval_freq=20_000,
-        checkpoint_dir=checkpoint_dir,
-    )
-
     # Training
     total_steps = args.steps or config["environment"]["episode_length_steps"] * 500
-    print(f"Training for {total_steps:,} steps...")
+    print(f"Training {args.agent.upper()} SAC for {total_steps:,} steps...")
     print(f"Logging to: {logger.run_dir}")
 
-    agent.train(total_timesteps=total_steps, callback=callback)
+    if use_custom:
+        agent.train(
+            total_timesteps=total_steps,
+            logger=logger,
+            log_freq=log_freq,
+            checkpoint_dir=checkpoint_dir,
+        )
+    else:
+        callback = MetricsCallback(
+            logger_obj=logger,
+            log_freq=log_freq,
+            eval_freq=20_000,
+            checkpoint_dir=checkpoint_dir,
+        )
+        agent.train(total_timesteps=total_steps, callback=callback)
 
     # Save final model
-    checkpoint_dir = Path(config["checkpointing"]["checkpoint_dir"])
-    checkpoint_dir.mkdir(parents=True, exist_ok=True)
-    final_path = checkpoint_dir / "final_model.zip"
+    ckpt_dir = Path(checkpoint_dir)
+    ckpt_dir.mkdir(parents=True, exist_ok=True)
+    ext = ".pt" if use_custom else ".zip"
+    final_path = ckpt_dir / f"final_model{ext}"
     agent.save(str(final_path))
 
     logger.log_audit_event("training_stop", {"total_steps": total_steps})
