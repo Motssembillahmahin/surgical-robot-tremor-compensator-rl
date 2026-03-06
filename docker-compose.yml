@@ -1,0 +1,72 @@
+services:
+  training:
+    build:
+      context: .
+      target: training
+    volumes:
+      - ./checkpoints:/app/checkpoints
+      - ./logs:/app/logs
+      - ./config.yaml:/app/config.yaml
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  dashboard:
+    build:
+      context: .
+      target: dashboard
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./logs:/app/logs
+      - ./feedback:/app/feedback
+      - ./checkpoints:/app/checkpoints
+    environment:
+      - FEEDBACK_API_KEY=${FEEDBACK_API_KEY}
+    depends_on:
+      - training
+
+  tensorboard:
+    image: tensorflow/tensorflow:latest
+    command: tensorboard --logdir /logs --host 0.0.0.0 --port 6006
+    ports:
+      - "6006:6006"
+    volumes:
+      - ./logs:/logs
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri sqlite:///mlflow.db
+      --default-artifact-root /artifacts
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow-data:/artifacts
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+
+volumes:
+  mlflow-data:
+  grafana-data:
