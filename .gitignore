@@ -191,6 +191,25 @@ cython_debug/
 # Ruff stuff:
 .ruff_cache/
 
+# ── Project-specific ──────────────────────────────────────────
+# Training artifacts
+checkpoints/
+logs/
+feedback/
+
+# Documentation (generated locally, not tracked)
+docs/
+
+# Frontend build
+frontend/node_modules/
+frontend/dist/
+
+# SBOM artifacts
+sbom*.json
+
+# Profiling
+*.prof
+
 # PyPI configuration file
 .pypirc
 

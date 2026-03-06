@@ -1,0 +1,84 @@
+# ── Environment ──────────────────────────────────────────────
+environment:
+  simulation_timestep_ms: 5.0     # dt = 5ms → 200 Hz control loop
+  episode_length_steps: 2000      # 2000 steps × 5ms = 10 seconds per episode
+  max_correction_mm: 2.0          # per-axis action clamp
+  tissue_boundary_position:       # static tissue target (mm)
+    x: 0.0
+    y: 0.0
+    z: 50.0
+
+  termination:
+    on_tissue_perforation: true   # end episode if tissue breached (hard mode)
+    on_max_steps: true            # end episode at episode_length_steps
+    max_consecutive_violations: 3 # end if 3 consecutive safety violations (soft mode)
+
+# ── Tremor Generator ────────────────────────────────────────
+tremor:
+  default_type: "essential"
+  profiles:
+    essential:
+      frequencies: [4.0, 5.5, 7.0]    # Hz
+      amplitudes:  [0.15, 0.10, 0.05]  # mm
+    parkinsons:
+      frequencies: [3.5, 4.5, 5.5]
+      amplitudes:  [0.20, 0.12, 0.06]
+    physiological:
+      frequencies: [8.0, 9.5, 11.0]
+      amplitudes:  [0.05, 0.03, 0.02]
+
+# ── SAC Hyperparameters ─────────────────────────────────────
+sac:
+  learning_rate: 3e-4
+  buffer_size: 1_000_000
+  batch_size: 256
+  tau: 0.005               # soft update coefficient
+  gamma: 0.99
+  ent_coef: "auto"         # automatic entropy tuning
+  target_entropy: "auto"
+  train_freq: 1
+  gradient_steps: 1
+
+# ── Reward Weights ──────────────────────────────────────────
+reward:
+  tracking_weight: 1.0
+  smoothness_weight: 0.1
+  safety_penalty: -100.0
+  latency_weight: 0.05
+  latency_threshold_ms: 20.0
+  human_feedback_weight: 1.0
+
+# ── Safety ──────────────────────────────────────────────────
+safety:
+  mode: "adaptive"          # "hard", "soft", or "adaptive"
+  safety_margin_mm: 2.0
+  soft_penalty_weight: 10.0
+  hard_threshold_steps: 50000
+
+# ── Checkpointing ───────────────────────────────────────────
+checkpointing:
+  save_freq_episodes: 100
+  keep_last_n: 5
+  save_best: true
+  best_metric: "compensation_error_mm"
+  best_mode: "min"
+  checkpoint_dir: "checkpoints/"
+  naming: "{timestamp}_{episode}_{metric:.4f}"
+  save_buffer: false
+
+# ── Logging ─────────────────────────────────────────────────
+logging:
+  backend: "tensorboard"
+  log_dir: "logs/"
+  log_freq_steps: 100
+  log_histograms: false
+
+# ── Evaluation ──────────────────────────────────────────────
+evaluation:
+  eval_freq_episodes: 50
+  eval_episodes: 10
+  save_trajectory_plots: true
+  human_feedback_freq: 100
+
+# ── Reproducibility ─────────────────────────────────────────
+seed: 42
